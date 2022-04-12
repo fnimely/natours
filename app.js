@@ -12,6 +12,9 @@ app.use(morgan("dev"));
 // body parsing middleware
 app.use(express.json());
 
+// express middlware used to serve static files
+app.use(express.static(`${__dirname}/public`));
+
 // custom middleware - applies to every request without specified route
 app.use((req, res, next) => {
   console.log("Hello from the middleware");
