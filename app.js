@@ -7,8 +7,10 @@ const userRouter = require("./routes/userRoutes");
 const app = express();
 
 // MIDDLEWARES
+
+// only run logger middleware while the app is in development
 if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));
+  app.use(morgan("dev")); // logger middleware
 }
 
 // body parsing middleware

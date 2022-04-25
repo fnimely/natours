@@ -1,11 +1,13 @@
 const dotenv = require("dotenv");
-const app = require("./app");
 
+// read variables from config file and save them in node env variables
 dotenv.config({ path: "./config.env" });
 
-console.log(process.env);
+const app = require("./app");
 
-const port = 3000;
+// console.log(process.env);
+
+const port = process.env.port || 3000;
 // start a server
 app.listen(port, () => {
   console.log(`App running on port ${port}`);
