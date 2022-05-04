@@ -43,6 +43,21 @@ const toursSchema = new mongoose.Schema({
 // creating a model out of the schema - model is used to create a document
 const Tour = mongoose.model("Tour", toursSchema);
 
+// create a document out of a tour model
+const testTour = new Tour({
+  name: "The Forest Hiker",
+  rating: 4.7,
+  price: 497,
+});
+
+// save document to db, resolves to the final doc in db
+testTour
+  .save()
+  .then((doc) => console.log(doc))
+  .catch((err) => {
+    console.log("Error: ", err);
+  });
+
 const port = process.env.port || 3000;
 // start a server
 app.listen(port, () => {
