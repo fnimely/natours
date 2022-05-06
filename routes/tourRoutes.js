@@ -4,7 +4,7 @@ const tourController = require("./../controllers/tourController");
 // create a new router
 const router = express.Router();
 
-router.param("id", tourController.checkID);
+// router.param("id", tourController.checkID);
 
 // root is '/api/v1/tours'
 router
