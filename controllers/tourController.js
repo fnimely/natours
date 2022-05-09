@@ -1,3 +1,6 @@
+// handle application requests, interact with models, and send back client response
+// this files contains route handler middleware for all TOUR resources
+
 const Tour = require("./../models/tourModels");
 
 // __dirname represents where the current script is located
@@ -19,7 +22,7 @@ exports.checkBody = (req, res, next) => {
 exports.getAllTours = (req, res) => {
   //this callback is 'route handler'
 
-  console.log(req.requestTime);
+  // console.log(req.requestTime);
 
   // sending the response
   res.status(200).json({

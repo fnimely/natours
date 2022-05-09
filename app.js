@@ -1,3 +1,5 @@
+// main app - middleware declarations
+
 const express = require("express");
 const morgan = require("morgan");
 
@@ -13,8 +15,8 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev")); // logger middleware
 }
 
-// body parsing middleware
-app.use(express.json());
+// body parsing middleware, adds body data to each request object
+app.use(express.json()); // the passed in function is added to the middleware stack
 
 // express middlware used to serve static files
 app.use(express.static(`${__dirname}/public`));
