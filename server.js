@@ -9,8 +9,7 @@ const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
   process.env.DATABASE_PASSWORD
 );
-console.log("The DB variable: ", DB);
-
+// console.log(process.env);
 // options to deal deprecation warnings
 mongoose
   .connect(DB, {
@@ -19,8 +18,6 @@ mongoose
     useFindAndModify: false,
   })
   .then(() => console.log("DB connection successful"));
-
-// console.log(process.env);
 
 // // create a document out of a tour model
 // const testTour = new Tour({
@@ -36,7 +33,7 @@ mongoose
 //     console.log("Error: ", err);
 //   });
 
-const port = process.env.port || 3000;
+const port = process.env.PORT || 3000;
 // start a server
 app.listen(port, () => {
   console.log(`App running on port ${port}`);
