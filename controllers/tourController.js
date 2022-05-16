@@ -14,7 +14,22 @@ exports.getAllTours = async (req, res) => {
   // console.log(req.requestTime);
 
   try {
-    const tours = await Tour.find();
+    const queryObj = { ...req.query };
+    const excludedFields = ["page", "sort", "limit", "fields"];
+
+    // remove all fields from query object
+    excludedFields.forEach((el) => delete queryObj[el]);
+    console.log(req.query, queryObj);
+
+    // one way of writing query
+    const tours = await Tour.find(queryObj);
+
+    // creating query with mongoose
+    // const tours = await Tour.find()
+    //   .where("duration")
+    //   .equals(5)
+    //   .where("difficulty")
+    //   .equals("easy");
 
     // sending the response
     res.status(200).json({
@@ -28,7 +43,7 @@ exports.getAllTours = async (req, res) => {
   } catch (err) {
     res.status(404).json({
       status: "fail",
-      message: err,
+      message: err.message,
     });
   }
 };

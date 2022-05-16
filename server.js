@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const app = require("./app");
 
 // read variables from config file and save them in node env variables
 dotenv.config({ path: "./config.env" });
 
+const app = require("./app");
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
   process.env.DATABASE_PASSWORD
@@ -16,6 +16,7 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
+    useUnifiedTopology: true,
   })
   .then(() => console.log("DB connection successful"));
 
