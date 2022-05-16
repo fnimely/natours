@@ -14,15 +14,25 @@ exports.getAllTours = async (req, res) => {
   // console.log(req.requestTime);
 
   try {
+    // build query
+    // filtering
     const queryObj = { ...req.query };
     const excludedFields = ["page", "sort", "limit", "fields"];
 
     // remove all fields from query object
     excludedFields.forEach((el) => delete queryObj[el]);
-    console.log(req.query, queryObj);
+    // console.log(req.query, queryObj);
+
+    // advanced filtering
+    // add dollar sign in query string
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    console.log(JSON.parse(queryStr));
 
     // one way of writing query
-    const tours = await Tour.find(queryObj);
+    const query = Tour.find(JSON.parse(queryStr));
+
+    // { difficulty: 'easy', duration: { $gte 5 } }
 
     // creating query with mongoose
     // const tours = await Tour.find()
@@ -30,6 +40,9 @@ exports.getAllTours = async (req, res) => {
     //   .equals(5)
     //   .where("difficulty")
     //   .equals("easy");
+
+    // execute query
+    const tours = await query;
 
     // sending the response
     res.status(200).json({
