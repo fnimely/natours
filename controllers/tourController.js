@@ -27,10 +27,20 @@ exports.getAllTours = async (req, res) => {
     // add dollar sign in query string
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-    console.log(JSON.parse(queryStr));
+    // console.log(JSON.parse(queryStr));
 
     // one way of writing query
-    const query = Tour.find(JSON.parse(queryStr));
+    let query = Tour.find(JSON.parse(queryStr));
+
+    // sorting
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(",").join(" ");
+      console.log(sortBy);
+      query = query.sort(req.query.sort);
+    } else {
+      // default sorts
+      query = query.sort("-createdAt");
+    }
 
     // { difficulty: 'easy', duration: { $gte 5 } }
 
