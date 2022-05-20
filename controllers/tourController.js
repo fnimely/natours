@@ -16,13 +16,74 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
+/** Class to implement API features (filter, sort, etc) */
 class APIFeatures {
+  /**
+   * Sets query and query string
+   * @param {Object} query - A mongoose query object (ie: Model.find())
+   * @param {String} queryString - The query string on the request object
+   */
   constructor(query, queryString) {
     this.query = query;
     this.queryString = queryString;
   }
 
-  filter() {}
+  /**
+   * Filters the query by manipulating the query
+   */
+  filter() {
+    // build query
+    // filtering
+    const queryObj = { ...this.queryString };
+    const excludedFields = ["page", "sort", "limit", "fields"];
+
+    // remove all fields from query object
+    excludedFields.forEach((el) => delete queryObj[el]);
+    // console.log(req.query, queryObj);
+
+    // advanced filtering
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`); // add dollar sign in query string
+
+    this.query = this.query.find(JSON.parse(queryStr)); // the 'query' class field now have a find method
+
+    return this; // returns entire object
+  }
+
+  sort() {
+    if (this.query.sort) {
+      const sortBy = this.queryString.sort.split(",").join(" ");
+      this.query = this.query.sort(sortBy);
+    } else {
+      // default sorts
+      this.query = this.query.sort("-createdAt");
+    }
+    return this;
+  }
+
+  limitFields() {
+    // limiting fields / projecting
+    if (this.queryString.fields) {
+      const fields = this.queryString.fields.split(",").join(" ");
+      console.log(fields);
+      this.query = this.query.select(fields);
+    } else {
+      // exculde __v field used by mongo
+      this.query = this.query.select("-__v");
+    }
+
+    return this;
+  }
+
+  paginate() {
+    const page = this.queryString.page * 1 || 1; // page 1 if no page in url
+    const limit = this.queryString.limit * 1 || 100;
+    const skip = (page - 1) * limit;
+
+    this.query = this.query.skip(skip).limit(limit);
+
+    return this;
+  }
 }
 
 exports.getAllTours = async (req, res) => {
@@ -31,60 +92,6 @@ exports.getAllTours = async (req, res) => {
   // console.log(req.requestTime);
 
   try {
-    // // build query
-    // // filtering
-    // const queryObj = { ...req.query };
-    // const excludedFields = ["page", "sort", "limit", "fields"];
-
-    // // remove all fields from query object
-    // excludedFields.forEach((el) => delete queryObj[el]);
-    // // console.log(req.query, queryObj);
-
-    // // advanced filtering
-    // // add dollar sign in query string
-    // let queryStr = JSON.stringify(queryObj);
-    // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-
-    // // one way of writing query
-    // let query = Tour.find(JSON.parse(queryStr));
-
-    // sorting
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(",").join(" ");
-      console.log(req.query);
-
-      // TODO: fix sorting
-      query = query.sort(req.query.sort);
-    } else {
-      // default sorts
-      query = query.sort("-createdAt");
-    }
-
-    // limiting fields / projecting
-    if (req.query.fields) {
-      const fields = req.query.fields.split(",").join(" ");
-      console.log(fields);
-      query = query.select(fields);
-    } else {
-      // exculde __v field used by mongo
-      query = query.select("-__v");
-    }
-
-    // pagination
-    const page = req.query.page * 1 || 1; // page 1 if no page in url
-    const limit = req.query.limit * 1 || 100;
-    const skip = (page - 1) * limit;
-
-    query = query.skip(skip).limit(limit);
-    // 2*10 = 3-1*10 so
-
-    if (req.query.page) {
-      const numTours = await Tour.countDocuments(); // method to return the number of documents
-      if (skip > numTours) {
-        throw new Error("This page does not exist.");
-      }
-    }
-
     // { difficulty: 'easy', duration: { $gte 5 } }
 
     // creating query with mongoose
@@ -95,7 +102,12 @@ exports.getAllTours = async (req, res) => {
     //   .equals("easy");
 
     // execute query
-    const tours = await query;
+    const features = new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+    const tours = await features.query;
 
     // sending the response
     res.status(200).json({
