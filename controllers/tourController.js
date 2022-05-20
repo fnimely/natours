@@ -8,34 +8,52 @@ const Tour = require("./../models/tourModels");
 //   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 // );
 
+// middlware to manipulate request object for alias route
+exports.aliasTopTours = (req, res, next) => {
+  req.query.limit = "5";
+  req.query.sort = "-ratingsAverage,price";
+  req.query.fields = "name,price,ratingsAverage,summary,difficulty";
+  next();
+};
+
+class APIFeatures {
+  constructor(query, queryString) {
+    this.query = query;
+    this.queryString = queryString;
+  }
+
+  filter() {}
+}
+
 exports.getAllTours = async (req, res) => {
   // this callback is 'route handler'
 
   // console.log(req.requestTime);
 
   try {
-    // build query
-    // filtering
-    const queryObj = { ...req.query };
-    const excludedFields = ["page", "sort", "limit", "fields"];
+    // // build query
+    // // filtering
+    // const queryObj = { ...req.query };
+    // const excludedFields = ["page", "sort", "limit", "fields"];
 
-    // remove all fields from query object
-    excludedFields.forEach((el) => delete queryObj[el]);
-    // console.log(req.query, queryObj);
+    // // remove all fields from query object
+    // excludedFields.forEach((el) => delete queryObj[el]);
+    // // console.log(req.query, queryObj);
 
-    // advanced filtering
-    // add dollar sign in query string
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-    // console.log(JSON.parse(queryStr));
+    // // advanced filtering
+    // // add dollar sign in query string
+    // let queryStr = JSON.stringify(queryObj);
+    // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-    // one way of writing query
-    let query = Tour.find(JSON.parse(queryStr));
+    // // one way of writing query
+    // let query = Tour.find(JSON.parse(queryStr));
 
     // sorting
     if (req.query.sort) {
       const sortBy = req.query.sort.split(",").join(" ");
-      console.log(sortBy);
+      console.log(req.query);
+
+      // TODO: fix sorting
       query = query.sort(req.query.sort);
     } else {
       // default sorts
@@ -45,6 +63,7 @@ exports.getAllTours = async (req, res) => {
     // limiting fields / projecting
     if (req.query.fields) {
       const fields = req.query.fields.split(",").join(" ");
+      console.log(fields);
       query = query.select(fields);
     } else {
       // exculde __v field used by mongo
