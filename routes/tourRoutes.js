@@ -11,6 +11,7 @@ router
   .route("/top-5-cheap")
   .get(tourController.aliasTopTours, tourController.getAllTours); // on this route, the middlware runs first
 
+router.route("/tour-stats").get(tourController.getTourStats);
 // root is '/api/v1/tours'
 router
   .route("/")
