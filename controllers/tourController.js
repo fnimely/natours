@@ -183,6 +183,7 @@ exports.getTourStats = async (req, res) => {
 exports.getMonthlyPlan = async (req, res) => {
   try {
     const year = req.params.year * 1;
+    // TODO: count how many tours there are for each of the month in a given year
     const plan = await Tour.aggregate([
       {
         $unwind: "$startDates", // one document for each of the dates
@@ -195,6 +196,18 @@ exports.getMonthlyPlan = async (req, res) => {
           },
         },
       },
+      {
+        // count number of tours in each month
+        $group: {
+          _id: { $month: "$startDates" },
+          numTourStarts: { $sum: 1 },
+          tours: { $push: "$name" },
+        },
+      },
+      { $addFields: { month: "$_id" } },
+      { $project: { _id: 0 } },
+      { $sort: { numTourStarts: -1 } },
+      { $limit: 12 },
     ]);
     res.status(200).json({
       status: "success",

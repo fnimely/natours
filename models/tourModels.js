@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { getTour } = require("../controllers/tourController");
 
 // creating a shcema - basic
 const toursSchema = new mongoose.Schema({
@@ -54,6 +55,11 @@ const toursSchema = new mongoose.Schema({
     select: false, // hide field from query
   },
   startDates: [Date],
+});
+
+// virtual property created each time we get some data from db
+toursSchema.virtual("durationWeeks").get(function () {
+  return this.duration / 7;
 });
 
 // creating a model out of the schema - model is used to create a document
