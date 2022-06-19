@@ -33,7 +33,7 @@ class APIFeatures {
   }
 
   sort() {
-    if (this.query.sort) {
+    if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(",").join(" ");
       this.query = this.query.sort(sortBy);
     } else {
@@ -47,7 +47,6 @@ class APIFeatures {
     // limiting fields / projecting
     if (this.queryString.fields) {
       const fields = this.queryString.fields.split(",").join(" ");
-      console.log(fields);
       this.query = this.query.select(fields);
     } else {
       // exculde __v field used by mongo

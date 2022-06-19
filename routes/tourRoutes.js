@@ -12,6 +12,7 @@ router
   .get(tourController.aliasTopTours, tourController.getAllTours); // on this route, the middlware runs first
 
 router.route("/tour-stats").get(tourController.getTourStats);
+router.route("/monthly-plan").get(tourController.getMonthlyPlan);
 // root is '/api/v1/tours'
 router
   .route("/")
