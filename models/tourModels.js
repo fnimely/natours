@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
+const validator = require("validator");
 const { getTour } = require("../controllers/tourController");
 
 // creating a shcema - basic
@@ -11,6 +12,8 @@ const toursSchema = new mongoose.Schema(
       required: [true, "A tour must have a name"],
       unique: true,
       trim: true,
+      // validate using the validator package
+      // validate: [validator.isAlpha, "Tour name must only contain characters."],
     },
     slug: String,
     duration: {
@@ -24,6 +27,10 @@ const toursSchema = new mongoose.Schema(
     difficulty: {
       type: String,
       required: [true, "A tour must have a difficulty"],
+      enum: {
+        values: ["easy", "medium", "difficult"],
+        message: "Difficulty is either: easy, medium, or difficult",
+      },
     },
     ratingsAverage: {
       type: Number,
@@ -37,7 +44,16 @@ const toursSchema = new mongoose.Schema(
       type: Number,
       required: [true, "A tour must have a price"], // validator used to validate data
     },
-    priceDiscount: Number,
+    priceDiscount: {
+      type: Number,
+      validate: {
+        // this only points to doc when creating new doc
+        validator: function (val) {
+          return val < this.price;
+        },
+      },
+      message: "Discount price ({VALUE}) should be below regular price",
+    },
     summary: {
       type: String,
       trim: true,
@@ -105,6 +121,14 @@ toursSchema.post(/^find/, function (docs, next) {
   // how long the query took
   console.log(`Query took ${Date.now - this.start}`);
   console.log(docs);
+  next();
+});
+
+// aggregation middleware
+toursSchema.pre("aggregate", function (next) {
+  // add a match stage at the beginning of the pipeline
+  this.pipeline().unshift({ $match: { secretTour: true } });
+  console.log(this);
   next();
 });
 
