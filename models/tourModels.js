@@ -58,6 +58,10 @@ const toursSchema = new mongoose.Schema(
       select: false, // hide field from query
     },
     startDates: [Date],
+    secretTour: {
+      type: Boolean,
+      default: false,
+    },
   },
   // schema options
   {
@@ -72,12 +76,13 @@ toursSchema.virtual("durationWeeks").get(function () {
 });
 
 // mongoose doc middlware: runs before save() and create()
+// only run for the save and create mongoose method
 toursSchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
 
-toursSchema.pre("save", function (next) {
+/* toursSchema.pre("save", function (next) {
   console.log("Will save document");
   next();
 });
@@ -85,6 +90,21 @@ toursSchema.pre("save", function (next) {
 // post has access to the document just saved to db
 toursSchema.post("save", function (doc, next) {
   console.log(doc);
+  next();
+}); */
+
+// Query middleware
+toursSchema.pre(/^find/, function (next) {
+  // append a find query to every query
+  this.find({ secretTour: { $ne: true } });
+  this.start = Date.now();
+  next();
+});
+
+toursSchema.post(/^find/, function (docs, next) {
+  // how long the query took
+  console.log(`Query took ${Date.now - this.start}`);
+  console.log(docs);
   next();
 });
 

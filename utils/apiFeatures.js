@@ -25,7 +25,8 @@ class APIFeatures {
 
     // advanced filtering
     let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`); // add dollar sign in query string
+    // add dollar sign in query string
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
     this.query = this.query.find(JSON.parse(queryStr)); // the 'query' class field now have a find method
 
