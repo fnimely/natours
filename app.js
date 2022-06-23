@@ -21,14 +21,6 @@ app.use(express.json()); // the passed in function is added to the middleware st
 // express middlware used to serve static files
 app.use(express.static(`${__dirname}/public`));
 
-// custom middleware - applies to every request without specified route
-app.use((req, res, next) => {
-  console.log("Hello from the middleware");
-
-  // send back response and move to next middleware - call next in stack
-  next();
-});
-
 app.use((req, res, next) => {
   // add current time to req object
   req.requestTime = new Date().toISOString(); // ISO convert to formatted date
@@ -39,6 +31,14 @@ app.use((req, res, next) => {
 // mount new routers on the tours and users routes
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
+
+// unhandled routes
+app.all("*", (req, res, next) => {
+  res.status(404).json({
+    status: "fail",
+    message: `Can't find ${req.originalUrl} on this server.`,
+  });
+});
 
 module.exports = app;
 
