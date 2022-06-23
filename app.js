@@ -3,6 +3,7 @@
 const express = require("express");
 const morgan = require("morgan");
 
+const AppError = require("./utils/appError");
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 
@@ -34,18 +35,13 @@ app.use("/api/v1/users", userRouter);
 
 // unhandled routes
 app.all("*", (req, res, next) => {
-  // res.status(404).json({
-  //   status: "fail",
-  //   message: `Can't find ${req.originalUrl} on this server.`,
-  // });
-
-  const err = new Error(`Can't find ${req.originalUrl} on this server.`);
-  err.status = "fail";
-  err.statusCode = 404;
+  // const err = new Error(`Can't find ${req.originalUrl} on this server.`);
+  // err.status = "fail";
+  // err.statusCode = 404;
 
   // a next function with a parameter is assumed to be an err, all
-  // other middleware is skipped.
-  next(err);
+  // other middleware is skipped
+  next(new AppError(`Can't find ${req.originalUrl} on this server.`));
 });
 
 // error handling middleware
