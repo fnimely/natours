@@ -3,7 +3,7 @@
 
 const Tour = require("./../models/tourModels");
 const APIFeatures = require("./../utils/apiFeatures");
-const catchAsync = require("../utils/catchAsync");
+const catchAsync = require("./../utils/catchAsync");
 
 // __dirname represents where the current script is located
 // const tours = JSON.parse(
