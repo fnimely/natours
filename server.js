@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
+// globally handle uncaught exceptions
+process.on("uncaughtException", (err) => {
+  console.log(err.name, err.message);
+
+  // shutdown app after closing server, not ideal for production
+  process.exit(1);
+});
+
 // read variables from config file and save them in node env variables
 dotenv.config({ path: "./config.env" });
 
