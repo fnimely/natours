@@ -1,5 +1,6 @@
 const express = require("express");
 const tourController = require("./../controllers/tourController");
+const authController = require("./../controllers/authController");
 
 // create a new router
 const router = express.Router();
@@ -16,7 +17,7 @@ router.route("/monthly-plan/:year").get(tourController.getMonthlyPlan);
 // root is '/api/v1/tours'
 router
   .route("/")
-  .get(tourController.getAllTours)
+  .get(authController.protect, tourController.getAllTours)
   .post(tourController.createTour); // checkBody middlware
 //
 router

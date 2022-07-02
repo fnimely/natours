@@ -51,3 +51,29 @@ exports.login = catchAsync(async (req, res, next) => {
     token,
   });
 });
+
+// middleware - protect resource from users not logged in
+exports.protect = catchAsync(async (req, res, next) => {
+  // get token and check if it exists
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) {
+    return next(
+      new AppError("You are not logged in! Please log in to continue.", 401)
+    );
+  }
+
+  // verify token
+
+  // check if user accessing routes still exist
+
+  // check if user changed password after token was issued
+
+  next();
+});
