@@ -49,13 +49,3 @@ app.all("*", (req, res, next) => {
 app.use(globalErrorHandler);
 
 module.exports = app;
-
-/* app.get("/", (req, res) => {
-  res
-    .status(200)
-    .json({ message: "Hello from the server side! Yeah.", app: "Natrous" });
-});
-
-app.post("/", (req, res) => {
-  res.send("You can no post to this endpoint.");
-}); */
