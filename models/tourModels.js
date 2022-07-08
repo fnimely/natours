@@ -120,7 +120,7 @@ toursSchema.pre(/^find/, function (next) {
 toursSchema.post(/^find/, function (docs, next) {
   // how long the query took
   console.log(`Query took ${Date.now - this.start}`);
-  console.log(docs);
+  // console.log(docs);
   next();
 });
 
@@ -128,7 +128,7 @@ toursSchema.post(/^find/, function (docs, next) {
 toursSchema.pre("aggregate", function (next) {
   // add a match stage at the beginning of the pipeline
   this.pipeline().unshift({ $match: { secretTour: true } });
-  console.log(this);
+  // console.log(this);
   next();
 });
 
