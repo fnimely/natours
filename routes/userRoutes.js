@@ -10,6 +10,12 @@ router.post("/login", authController.login);
 router.post("/forgotPassword", authController.forgotPassword); // receives the email
 router.patch("/resetPassword/:token", authController.resetPassword); // receives token plus new password
 
+router.patch(
+  "/updateMyPassword",
+  authController.protect,
+  authController.updatePassword
+);
+
 router
   .route("/")
   .get(userController.getAllUsers)
