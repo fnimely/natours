@@ -8,7 +8,7 @@ router.post("/signup", authController.signup);
 router.post("/login", authController.login);
 
 router.post("/forgotPassword", authController.forgotPassword); // receives the email
-router.post("/resetPassword", authController.resetPassword); // receives token plus new password
+router.patch("/resetPassword/:token", authController.resetPassword); // receives token plus new password
 
 router
   .route("/")
