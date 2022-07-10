@@ -101,7 +101,12 @@ const toursSchema = new mongoose.Schema(
         day: Number,
       },
     ],
-    guides: Array,
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId, // type must be a mongodb id
+        ref: "User", // referencing User collection
+      },
+    ],
   },
   // schema options
   {
@@ -122,12 +127,12 @@ toursSchema.pre("save", function (next) {
   next();
 });
 
-toursSchema.pre("save", async function (next) {
-  const guidesPromises = this.guides.map((id) => await User.findById(id));
-  this.guides = await Promise.all(guidesPromises)
+// toursSchema.pre("save", async function (next) {
+//   const guidesPromises = this.guides.map((id) => await User.findById(id));
+//   this.guides = await Promise.all(guidesPromises)
 
-  next();
-});
+//   next();
+// });
 
 // Query middleware
 toursSchema.pre(/^find/, function (next) {
