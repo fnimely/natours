@@ -3,6 +3,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
@@ -13,11 +14,14 @@ const app = express();
 
 // global MIDDLEWARES
 
+app.use(helmet()); // set security http headers
+
 // only run logger middleware while the app is in development
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev")); // logger middleware
 }
 
+// limit request from same IP
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
@@ -26,7 +30,7 @@ const limiter = rateLimit({
 app.use("/api", limiter); // restric limiter to api routes
 
 // body parsing middleware, adds body data to each request object
-app.use(express.json()); // the passed in function is added to the middleware stack
+app.use(express.json({ limit: "10kb" })); // the passed in function is added to the middleware stack
 
 // express middlware used to serve static files
 app.use(express.static(`${__dirname}/public`));
