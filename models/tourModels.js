@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
+const User = require("./userModel");
 const validator = require("validator");
-const { getTour } = require("../controllers/tourController");
 
 // creating a shcema
 const toursSchema = new mongoose.Schema(
@@ -101,6 +101,7 @@ const toursSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+    guides: Array,
   },
   // schema options
   {
@@ -121,16 +122,12 @@ toursSchema.pre("save", function (next) {
   next();
 });
 
-/* toursSchema.pre("save", function (next) {
-  console.log("Will save document");
+toursSchema.pre("save", async function (next) {
+  const guidesPromises = this.guides.map((id) => await User.findById(id));
+  this.guides = await Promise.all(guidesPromises)
+
   next();
 });
-
-// post has access to the document just saved to db
-toursSchema.post("save", function (doc, next) {
-  console.log(doc);
-  next();
-}); */
 
 // Query middleware
 toursSchema.pre(/^find/, function (next) {
