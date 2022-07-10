@@ -3,7 +3,7 @@ const slugify = require("slugify");
 const validator = require("validator");
 const { getTour } = require("../controllers/tourController");
 
-// creating a shcema - basic
+// creating a shcema
 const toursSchema = new mongoose.Schema(
   {
     name: {
@@ -78,6 +78,29 @@ const toursSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      type: {
+        type: String,
+        default: "Point",
+        enum: ["Point"],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: "Point",
+          enum: ["Point"],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],
   },
   // schema options
   {
