@@ -142,6 +142,15 @@ toursSchema.pre(/^find/, function (next) {
   next();
 });
 
+// popullate doc using 'guides' path
+toursSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "guides",
+    select: "-__v -passwordChangedAt",
+  });
+  next();
+});
+
 toursSchema.post(/^find/, function (docs, next) {
   // how long the query took
   console.log(`Query took ${Date.now - this.start}`);
