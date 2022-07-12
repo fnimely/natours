@@ -115,9 +115,16 @@ const toursSchema = new mongoose.Schema(
   }
 );
 
-// virtual property (vp) created each time we get some data from db
+// virtual property created each time we get some data from db
 toursSchema.virtual("durationWeeks").get(function () {
   return this.duration / 7; // tour duration in weeks
+});
+
+// virtual populate
+toursSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "tour",
+  localField: "_id",
 });
 
 // mongoose doc middlware: runs before save() and create()
