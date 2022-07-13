@@ -67,7 +67,7 @@ exports.getOne = (Model, populateOption) =>
 
     res.status(200).json({
       status: "success",
-      results: tour.length,
+      results: doc.length,
       data: {
         data: doc,
       },
