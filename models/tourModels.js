@@ -173,12 +173,12 @@ toursSchema.post(/^find/, function (docs, next) {
 });
 
 // aggregation middleware
-toursSchema.pre("aggregate", function (next) {
-  // add a match stage at the beginning of the pipeline
-  this.pipeline().unshift({ $match: { secretTour: true } });
-  // console.log(this);
-  next();
-});
+// toursSchema.pre("aggregate", function (next) {
+//   // add a match stage at the beginning of the pipeline
+//   this.pipeline().unshift({ $match: { secretTour: true } });
+//   // console.log(this);
+//   next();
+// });
 
 // create/compile a model of the schema - model is used to create a document
 const Tour = mongoose.model("Tour", toursSchema);

@@ -25,6 +25,8 @@ router
 router
   .route("/tours-within/:distance/center/:latlng/unit/:unit")
   .get(tourController.getToursWithin);
+
+router.route("/distances/:latlng/unit/:unit").get(tourController.getDistances);
 // root is '/api/v1/tours'
 router
   .route("/")
