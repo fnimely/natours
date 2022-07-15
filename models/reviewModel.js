@@ -70,12 +70,13 @@ reviewSchema.post("save", function () {
 });
 
 reviewSchema.pre(/^findOneAnd/, async function (next) {
+  // store current doc on current query
   this.r = await this.findOne();
   // console.log(r);
+  next();
 });
 
 reviewSchema.post(/^findOneAnd/, async function () {
-  // TODO: WHAT??
   await this.r.constructor.calcAverageRatings(this.r.tour);
 });
 
