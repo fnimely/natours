@@ -1,4 +1,6 @@
 const Tour = require("../models/tourModels");
+const User = require("../models/userModel");
+const Review = require("../models/reviewModel");
 const catchAsync = require("../utils/catchAsync");
 
 exports.getOverview = catchAsync(async (req, res, next) => {
@@ -15,9 +17,13 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getTour = (req, res) => {
-  res.status(200).render("base", {
-    tour: "The Forest Hiker",
-    user: "Facsimile",
+exports.getTour = catchAsync(async (req, res) => {
+  const tour = await Tour.findOne({ slug: req.params.slug }).populate(
+    "reviews",
+    "review rating user"
+  );
+
+  res.status(200).render("tour", {
+    tour,
   });
-};
+});
