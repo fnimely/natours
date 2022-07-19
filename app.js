@@ -28,34 +28,36 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
+  // prettier-ignore
   helmet.contentSecurityPolicy({
+    // HACK
     directives: {
-      defaultSrc: ["'self'", "data:", "blob:"],
-
+      defaultSrc: ["'self'", 'data:', 'blob:'],
+ 
       baseUri: ["'self'"],
-
-      fontSrc: ["'self'", "https:", "data:"],
-
-      scriptSrc: ["'self'", "https://*.cloudflare.com"],
-
-      scriptSrc: ["'self'", "https://*.stripe.com"],
-
-      scriptSrc: ["'self'", "http:", "https://*.mapbox.com", "data:"],
-
-      frameSrc: ["'self'", "https://*.stripe.com"],
-
+ 
+      fontSrc: ["'self'", 'https:', 'data:'],
+ 
+      scriptSrc: ["'self'", 'https://*.cloudflare.com'],
+ 
+      scriptSrc: ["'self'", 'https://*.stripe.com'],
+ 
+      scriptSrc: ["'self'", 'http:', 'https://*.mapbox.com', 'data:'],
+ 
+      frameSrc: ["'self'", 'https://*.stripe.com'],
+ 
       objectSrc: ["'none'"],
-
-      styleSrc: ["'self'", "https:", "unsafe-inline"],
-
-      workerSrc: ["'self'", "data:", "blob:"],
-
-      childSrc: ["'self'", "blob:"],
-
-      imgSrc: ["'self'", "data:", "blob:"],
-
-      connectSrc: ["'self'", "blob:", "https://*.mapbox.com"],
-
+ 
+      styleSrc: ["'self'", 'https:', 'unsafe-inline'],
+ 
+      workerSrc: ["'self'", 'data:', 'blob:'],
+ 
+      childSrc: ["'self'", 'blob:'],
+ 
+      imgSrc: ["'self'", 'data:', 'blob:'],
+ 
+      connectSrc: ["'self'", 'blob:', 'https://*.mapbox.com'],
+ 
       upgradeInsecureRequests: [],
     },
   })
