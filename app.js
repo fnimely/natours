@@ -8,6 +8,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+const cookieParser = require("cookie-parser");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
@@ -26,7 +27,39 @@ app.set("views", path.join(__dirname, "views"));
 // express middlware used to serve static files
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(helmet()); // set security http headers
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", "data:", "blob:"],
+
+      baseUri: ["'self'"],
+
+      fontSrc: ["'self'", "https:", "data:"],
+
+      scriptSrc: ["'self'", "https://*.cloudflare.com"],
+
+      scriptSrc: ["'self'", "https://*.stripe.com"],
+
+      scriptSrc: ["'self'", "http:", "https://*.mapbox.com", "data:"],
+
+      frameSrc: ["'self'", "https://*.stripe.com"],
+
+      objectSrc: ["'none'"],
+
+      styleSrc: ["'self'", "https:", "unsafe-inline"],
+
+      workerSrc: ["'self'", "data:", "blob:"],
+
+      childSrc: ["'self'", "blob:"],
+
+      imgSrc: ["'self'", "data:", "blob:"],
+
+      connectSrc: ["'self'", "blob:", "https://*.mapbox.com"],
+
+      upgradeInsecureRequests: [],
+    },
+  })
+); // set security http headers
 
 // only run logger middleware while the app is in development
 if (process.env.NODE_ENV === "development") {
@@ -43,6 +76,7 @@ app.use("/api", limiter); // restric limiter to api routes
 
 // body parsing middleware, adds body data to each request object
 app.use(express.json({ limit: "10kb" })); // the passed in function is added to the middleware stack
+app.use(cookieParser());
 
 // sanitize - NoSQL query injection
 app.use(mongoSanitize());
