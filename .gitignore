@@ -3,3 +3,5 @@ config.env
 /dev-data/templates
 public/js/mapbox.js
 /.cache
+/public/js/bundle.js
+/public/js/bundle.js.map
