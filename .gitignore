@@ -2,3 +2,4 @@
 config.env
 /dev-data/templates
 public/js/mapbox.js
+/.cache
