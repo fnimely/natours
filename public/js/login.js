@@ -1,5 +1,5 @@
-import "@babel/polyfill";
 import axios from "axios";
+import { showAlert } from "./alert";
 
 export const login = async (email, password) => {
   try {
@@ -13,11 +13,12 @@ export const login = async (email, password) => {
     });
 
     if (res.data.status === "success") {
+      showAlert("success", "Logged in successfully");
       window.setTimeout(() => {
         location.assign("/");
       }, 1500);
     }
   } catch (err) {
-    alert(err.response.data.message);
+    showAlert("error", err.message);
   }
 };
