@@ -87,6 +87,8 @@ app.use(mongoSanitize());
 // XSS prevention
 app.use(xss());
 
+console.log(process.env.NODE_ENV);
+
 // prevent parameter pollution
 app.use(
   hpp({
