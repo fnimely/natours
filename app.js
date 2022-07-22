@@ -79,6 +79,7 @@ app.use("/api", limiter); // restric limiter to api routes
 
 // body parsing middleware, adds body data to each request object
 app.use(express.json({ limit: "10kb" })); // the passed in function is added to the middleware stack
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 
 // sanitize - NoSQL query injection
