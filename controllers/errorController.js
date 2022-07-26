@@ -59,7 +59,7 @@ const sendErrorProd = (err, req, res) => {
     //  send a generic message
     return res.status(500).json({
       status: "error",
-      message: "Something went wrong!",
+      message: err,
     });
   }
 
@@ -86,6 +86,7 @@ module.exports = (err, req, res, next) => {
     sendErrorDev(err, req, res);
   } else if (process.env.NODE_ENV === "production") {
     let error = { ...err };
+    console.log(err);
     error.message = err.mesage;
 
     if (error.name === "CastError") error = handleCastErrorDB(error);
