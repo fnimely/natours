@@ -2,6 +2,7 @@ extends base
 
 block append head
     script(src='https://unpkg.com/leaflet@1.8.0/dist/leaflet.js' integrity='sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==' crossorigin='')
+    script(src='https://js.stripe.com/v3/')
 
 
 mixin reviewCard(review)
@@ -97,4 +98,8 @@ block content
             .cta__content
                 h2.heading-secondary What are you waiting for?
                 p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
-                button.btn.btn--green.span-all-rows Book tour now!
+
+                if user
+                    button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour._id}`) Book tour now!
+                else 
+                    a.button.btn.btn--green.span-all-rows(href=`/login`) Log in to book!
